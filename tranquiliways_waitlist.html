@@ -1868,8 +1868,13 @@
 </div>
 
 <script>
+  window.TRANQUILIWAYS_SUPABASE = {
+    url: 'https://kgidxqqjuinadrzahfbl.supabase.co',
+    anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtnaWR4cXFqdWluYWRyemFoZmJsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIwOTE0NDksImV4cCI6MjA5NzY2NzQ0OX0.oPrMISIzVVIJ2tAFwjEbs_lo6HXe9wllaalIrZas7hg',
+  };
+
   /* ── Estado 1 → 2 ── */
-  function handleSubmit() {
+  async function handleSubmit() {
     const textarea = document.getElementById('dilemmaInput');
     const overlay  = textarea.closest('.textarea-overlay');
     const btn      = document.getElementById('submitBtn');
@@ -1898,7 +1903,40 @@
     btn.disabled    = true;
     btn.classList.add('is-sending');
 
-    window.setTimeout(() => {
+    const savePromise = window.saveDilemmaResponse
+      ? window.saveDilemmaResponse(text)
+      : Promise.resolve({ ok: true, skipped: true });
+    const saveWithTimeout = Promise.race([
+      savePromise,
+      new Promise(resolve => {
+        window.setTimeout(() => resolve({ ok: false, timedOut: true }), 7000);
+      }),
+    ]);
+
+    window.setTimeout(async () => {
+      const saveResult = await saveWithTimeout;
+
+      if (!saveResult.ok && !saveResult.skipped) {
+        btn.disabled = false;
+        btn.classList.remove('is-sending');
+        overlay.style.boxShadow = [
+          '0 22px 42px rgba(26, 157, 224, 0.18)',
+          '0 0 0 3px rgba(255,80,80,0.34)',
+          'inset 0 1px 0 rgba(255,255,255,0.72)'
+        ].join(', ');
+        overlay.style.borderColor = 'rgba(255,120,120,0.85)';
+        textarea.setCustomValidity('Nao conseguimos salvar sua resposta agora. Tente novamente em alguns segundos.');
+        textarea.reportValidity();
+        textarea.focus();
+
+        setTimeout(() => {
+          overlay.style.boxShadow = '';
+          overlay.style.borderColor = '';
+          textarea.setCustomValidity('');
+        }, 2200);
+        return;
+      }
+
       const s1 = document.getElementById('state1');
       const s2 = document.getElementById('state2');
 
@@ -2130,6 +2168,60 @@
     });
   });
 
+</script>
+
+<script type="module">
+  window.saveDilemmaResponse = async function saveDilemmaResponseWithoutConfig() {
+    return { ok: true, skipped: true };
+  };
+
+  import("https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm")
+    .then(({ createClient }) => {
+      const config = window.TRANQUILIWAYS_SUPABASE || {};
+      const supabaseUrl = (config.url || '').trim();
+      const supabaseAnonKey = (config.anonKey || '').trim();
+      const isConfigured = supabaseUrl.startsWith('https://') && supabaseAnonKey.length > 30;
+
+      if (!isConfigured) {
+        console.warn('Supabase ainda nao configurado. Preencha window.TRANQUILIWAYS_SUPABASE.url e anonKey.');
+        return;
+      }
+
+      const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+        auth: {
+          persistSession: false,
+          autoRefreshToken: false,
+        },
+      });
+
+      window.saveDilemmaResponse = async function saveDilemmaResponse(dilemmaText) {
+        try {
+          const { error } = await supabase
+            .from('dilemma_responses')
+            .insert({
+              dilemma_text: dilemmaText,
+              source: 'waitlist',
+              page_path: window.location.pathname,
+              referrer: document.referrer || null,
+              user_locale: navigator.language || null,
+              client_timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || null,
+            });
+
+          if (error) {
+            console.error('Erro ao salvar resposta no Supabase:', error);
+            return { ok: false, error };
+          }
+
+          return { ok: true };
+        } catch (error) {
+          console.error('Erro inesperado ao salvar resposta:', error);
+          return { ok: false, error };
+        }
+      };
+    })
+    .catch((error) => {
+      console.error('Nao foi possivel carregar o cliente do Supabase:', error);
+    });
 </script>
 
 <script type="module">
