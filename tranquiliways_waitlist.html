@@ -681,7 +681,7 @@
       }
 
       #state2 {
-        width: min(500px, 100%);
+        width: min(560px, 100%);
         margin: 0 auto;
         align-self: auto;
       }
@@ -1168,6 +1168,11 @@
       margin-bottom: 2rem;
     }
 
+    .solution-highlight {
+      color: var(--sun);
+      font-weight: 800;
+    }
+
     .divider {
       width: 36px;
       height: 1px;
@@ -1183,81 +1188,364 @@
       margin-bottom: 18px;
     }
 
-    .whatsapp-cta {
+    .thank-you-tickets {
       display: flex;
       justify-content: center;
+      align-items: stretch;
+      flex-wrap: wrap;
+      gap: 18px;
+      margin: 0 auto;
+      animation: fadeUp 0.5s 0.42s var(--ease-out) both;
     }
 
-    .whatsapp-btn {
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
-      width: 45px;
-      height: 45px;
-      border: none;
-      border-radius: 50%;
-      cursor: pointer;
+    .thank-you-ticket {
+      --ticket-width: 250px;
+      --ticket-height: 362px;
+      --perforation-size: 12px;
+      --cutouts-adjust: 96px;
+      --ticket-ink: #16303d;
       position: relative;
-      overflow: hidden;
+      width: var(--ticket-width);
+      min-height: var(--ticket-height);
+      border: 0;
+      background: transparent;
+      color: var(--ticket-ink);
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      gap: 14px;
+      padding: 18px 18px 20px;
+      text-align: left;
       text-decoration: none;
-      transition-duration: 0.3s;
-      box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.199);
-      background:
-        radial-gradient(circle at 32% 26%, rgba(255, 219, 88, 0.22), transparent 34%),
-        linear-gradient(145deg, #007f52, var(--emerald) 56%, var(--emerald-deep));
+      font-family: 'Open Sauce One', 'Nunito', sans-serif;
+      white-space: normal;
+      overflow: hidden;
+      isolation: isolate;
+      filter:
+        drop-shadow(0 5px 4px rgba(19, 82, 112, 0.18))
+        drop-shadow(0 18px 18px rgba(19, 82, 112, 0.18));
+      transition:
+        transform 180ms ease-out,
+        filter 220ms ease-out;
     }
 
-    .whatsapp-sign {
-      width: 100%;
-      transition-duration: 0.3s;
-      display: flex;
+    .thank-you-ticket::before,
+    .thank-you-ticket::after {
+      content: "";
+      position: absolute;
+      top: var(--cutouts-adjust);
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--sky);
+      z-index: 3;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.3);
+    }
+
+    .thank-you-ticket::before {
+      left: -11px;
+    }
+
+    .thank-you-ticket::after {
+      right: -11px;
+    }
+
+    .thank-you-ticket:hover,
+    .thank-you-ticket:focus-visible {
+      transform: translateY(-6px) scale(1.015);
+      filter:
+        drop-shadow(0 7px 6px rgba(19, 82, 112, 0.14))
+        drop-shadow(0 26px 24px rgba(19, 82, 112, 0.2));
+    }
+
+    .thank-you-ticket:focus-visible {
+      outline: 3px solid rgba(255,219,88,0.72);
+      outline-offset: 4px;
+    }
+
+    .thank-you-ticket:active {
+      transform: translateY(-1px) scale(0.99);
+    }
+
+    .ticket-bg {
+      position: absolute;
+      inset: 0;
+      z-index: -2;
+      border-radius: 24px;
+      background:
+        linear-gradient(to bottom, rgba(255,255,255,0.44), rgba(255,255,255,0.02) 38%, rgba(22, 48, 61, 0.12)),
+        conic-gradient(
+          from 24deg at 60% 42%,
+          #f4f7f2,
+          #b5efe1,
+          #ffdb58,
+          #79d5f4,
+          #f8f4e4,
+          #00a878,
+          #f4f7f2
+        );
+      filter: url("#ticket-bump");
+      -webkit-mask:
+        radial-gradient(circle at 50% 0, transparent calc(var(--perforation-size) - 5px), #000 calc(var(--perforation-size) - 4px)),
+        radial-gradient(circle at 50% 100%, transparent calc(var(--perforation-size) - 5px), #000 calc(var(--perforation-size) - 4px)),
+        radial-gradient(circle 11px at left var(--cutouts-adjust), transparent 98%, #000 100%),
+        radial-gradient(circle 11px at right var(--cutouts-adjust), transparent 98%, #000 100%),
+        repeating-linear-gradient(90deg, #000 0 10px, transparent 10px 18px);
+      -webkit-mask-repeat: repeat-x, repeat-x, no-repeat, no-repeat, repeat-x;
+      -webkit-mask-size:
+        calc(var(--perforation-size) * 2) 100%,
+        calc(var(--perforation-size) * 2) 100%,
+        22px 22px,
+        22px 22px,
+        18px 2px;
+      -webkit-mask-position:
+        calc(0.5 * var(--perforation-size)) top,
+        calc(0.5 * var(--perforation-size)) bottom,
+        left var(--cutouts-adjust),
+        right var(--cutouts-adjust),
+        0 calc(var(--cutouts-adjust) + 10px);
+      mask:
+        radial-gradient(circle at 50% 0, transparent calc(var(--perforation-size) - 5px), #000 calc(var(--perforation-size) - 4px)),
+        radial-gradient(circle at 50% 100%, transparent calc(var(--perforation-size) - 5px), #000 calc(var(--perforation-size) - 4px)),
+        radial-gradient(circle 11px at left var(--cutouts-adjust), transparent 98%, #000 100%),
+        radial-gradient(circle 11px at right var(--cutouts-adjust), transparent 98%, #000 100%),
+        repeating-linear-gradient(90deg, #000 0 10px, transparent 10px 18px);
+      mask-repeat: repeat-x, repeat-x, no-repeat, no-repeat, repeat-x;
+      mask-size:
+        calc(var(--perforation-size) * 2) 100%,
+        calc(var(--perforation-size) * 2) 100%,
+        22px 22px,
+        22px 22px,
+        18px 2px;
+      mask-position:
+        calc(0.5 * var(--perforation-size)) top,
+        calc(0.5 * var(--perforation-size)) bottom,
+        left var(--cutouts-adjust),
+        right var(--cutouts-adjust),
+        0 calc(var(--cutouts-adjust) + 10px);
+    }
+
+    .thank-you-ticket--updates .ticket-bg {
+      background:
+        linear-gradient(to bottom, rgba(255,255,255,0.52), rgba(255,255,255,0.08) 40%, rgba(74, 75, 109, 0.12)),
+        conic-gradient(
+          from 210deg at 46% 52%,
+          #f6fbfc,
+          #b8ecff,
+          #ffdb58,
+          #9b5bf0,
+          #f7f2ff,
+          #5cc3ff,
+          #f6fbfc
+        );
+    }
+
+    .ticket-bg::before,
+    .ticket-bg::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      pointer-events: none;
+    }
+
+    .ticket-bg::before {
+      background:
+        radial-gradient(circle at 70% 18%, rgba(255,255,255,0.92), transparent 16%),
+        repeating-radial-gradient(circle at 30% 82%, rgba(255,255,255,0.68), rgba(255,219,88,0.24) 46px, rgba(246,251,252,0.26) 130px);
+      mix-blend-mode: soft-light;
+    }
+
+    .ticket-bg::after {
+      background: linear-gradient(115deg, transparent 0 35%, rgba(255,255,255,0.62) 46%, transparent 58% 100%);
+      transform: translateX(-120%);
+      animation: ticket-shine 4.8s ease-in-out infinite;
+    }
+
+    .ticket-watermark {
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      color: rgba(255,255,255,0.28);
+      font-family: 'Peace Sans', 'Nunito', sans-serif;
+      font-size: 2.4rem;
+      line-height: 1.1;
+      transform: rotate(-18deg) translate(-12%, 12%);
+      pointer-events: none;
+      mix-blend-mode: soft-light;
+    }
+
+    .ticket-watermark span {
+      display: block;
+      white-space: nowrap;
+    }
+
+    .ticket-header {
+      position: relative;
+      z-index: 1;
+      display: block;
+      min-width: 0;
+      padding-right: 46px;
+      padding-bottom: 20px;
+      border-bottom: 2px dashed rgba(22, 48, 61, 0.3);
+    }
+
+    .ticket-kicker {
+      display: block;
+      color: rgba(22,48,61,0.62);
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .ticket-pass {
+      display: block;
+      margin-top: 3px;
+      font-family: 'Peace Sans', 'Nunito', sans-serif;
+      font-size: 21px;
+      line-height: 1.02;
+      color: rgba(22,48,61,0.9);
+      text-transform: uppercase;
+      overflow-wrap: anywhere;
+      text-wrap: balance;
+    }
+
+    .thank-you-ticket--updates .ticket-pass {
+      font-size: 18px;
+    }
+
+    .ticket-icon {
+      position: absolute;
+      top: 2px;
+      right: 0;
+      width: 34px;
+      height: 34px;
+      flex: 0 0 auto;
+      border-radius: 50%;
+      display: inline-flex;
       align-items: center;
       justify-content: center;
-      flex-shrink: 0;
+      background: rgba(246,251,252,0.44);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.64);
+      color: rgba(22,48,61,0.9);
     }
 
-    .whatsapp-sign svg {
-      width: 25px;
+    .ticket-icon svg {
+      width: 20px;
+      height: 20px;
       display: block;
     }
 
-    .whatsapp-sign svg path {
-      fill: var(--white);
+    .ticket-body {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+      padding-top: 4px;
+      min-width: 0;
     }
 
-    .whatsapp-text {
+    .ticket-title {
+      font-size: 17px;
+      font-weight: 900;
+      line-height: 1.12;
+      letter-spacing: 0;
+      max-width: 100%;
+      overflow-wrap: anywhere;
+      text-wrap: balance;
+    }
+
+    .ticket-note {
+      width: fit-content;
+      color: #0c6247;
+      background: rgba(246,251,252,0.58);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      border-radius: 999px;
+      padding: 5px 9px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.58);
+    }
+
+    .ticket-note:empty {
+      display: none;
+    }
+
+    .thank-you-ticket--updates .ticket-note {
+      color: #5a348c;
+    }
+
+    .ticket-copy {
+      color: rgba(22,48,61,0.76);
+      font-size: 12px;
+      font-weight: 650;
+      line-height: 1.46;
+      overflow-wrap: anywhere;
+    }
+
+    .ticket-footer {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      gap: 10px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(22,48,61,0.18);
+      min-width: 0;
+    }
+
+    .ticket-action {
+      color: rgba(22,48,61,0.92);
+      font-size: 13px;
+      font-weight: 800;
+      line-height: 1.2;
+      overflow-wrap: anywhere;
+    }
+
+    .ticket-barcode {
+      justify-self: center;
+      width: 78px;
+      height: 28px;
+      opacity: 0.78;
+      background:
+        repeating-linear-gradient(
+          90deg,
+          rgba(22,48,61,0.86) 0 2px,
+          transparent 2px 5px,
+          rgba(22,48,61,0.86) 5px 6px,
+          transparent 6px 10px,
+          rgba(22,48,61,0.86) 10px 13px,
+          transparent 13px 17px
+        );
+      border-radius: 2px;
+    }
+
+    .ticket-filter {
       position: absolute;
-      right: 0;
       width: 0;
-      opacity: 0;
-      color: var(--white);
-      font-size: 1.05em;
-      font-weight: 600;
-      white-space: nowrap;
-      transition-duration: 0.3s;
+      height: 0;
+      pointer-events: none;
     }
 
-    .whatsapp-btn:hover,
-    .whatsapp-btn:focus-visible {
-      width: 150px;
-      border-radius: 40px;
+    @keyframes ticket-shine {
+      0%, 58% { transform: translateX(-125%); }
+      78%, 100% { transform: translateX(125%); }
     }
 
-    .whatsapp-btn:hover .whatsapp-sign,
-    .whatsapp-btn:focus-visible .whatsapp-sign {
-      width: 30%;
-      padding-left: 10px;
-    }
+    @media (max-width: 460px) {
+      .thank-you-tickets {
+        gap: 16px;
+      }
 
-    .whatsapp-btn:hover .whatsapp-text,
-    .whatsapp-btn:focus-visible .whatsapp-text {
-      opacity: 1;
-      width: 70%;
-      padding-right: 10px;
-    }
-
-    .whatsapp-btn:active {
-      transform: translate(2px, 2px);
+      .thank-you-ticket {
+        --ticket-width: min(268px, calc(100vw - 72px));
+        --ticket-height: 330px;
+        min-height: var(--ticket-height);
+      }
     }
 
     /* ─── Animação base ─── */
@@ -1483,27 +1771,96 @@
     </button>
 
     <h2 class="success-title">Recebemos<br>seu dilema.</h2>
-    <p class="success-sub">Em breve, suas Ways vão ganhar forma.</p>
+    <p class="success-sub">Quando o TranquiliWays abrir, você vai poder vivê-lo — antes que o futuro se torne um problema ao invés de uma <span class="solution-highlight">SOLUÇÃO</span>.</p>
 
     <div class="divider" aria-hidden="true"></div>
 
-    <p class="community-prompt">Entre na comunidade para acompanhar as atualizações e fazer parte dos bônus exclusivos de fundador.</p>
+    <p class="community-prompt">Enquanto isso, você decide como quer fazer parte da construção do futuro.</p>
 
-    <div class="whatsapp-cta">
+    <div class="thank-you-tickets" aria-label="Escolha como acompanhar o TranquiliWays">
       <a
-        class="whatsapp-btn"
-        href="https://chat.whatsapp.com/SEU_CODIGO_DO_GRUPO"
+        class="thank-you-ticket thank-you-ticket--founders"
+        href="https://chat.whatsapp.com/DTejBx1HGtOF1L6q5fiok6?s=cl&p=i&mlu=4"
         target="_blank"
         rel="noopener noreferrer"
-        aria-label="Entrar no grupo de atualizações no WhatsApp"
+        aria-label="Quero ser Fundador do TranquiliWays"
       >
-        <span class="whatsapp-sign" aria-hidden="true">
-          <svg class="socialSvg whatsappSvg" viewBox="0 0 16 16">
-            <path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232z" />
-          </svg>
+        <span class="ticket-bg" aria-hidden="true"></span>
+        <span class="ticket-watermark" aria-hidden="true">
+          <span>FOUNDER</span>
+          <span>FOUNDER</span>
+          <span>FOUNDER</span>
         </span>
-        <span class="whatsapp-text">Whatsapp</span>
+        <span class="ticket-header">
+          <span>
+            <span class="ticket-kicker">Passe Fundador</span>
+            <span class="ticket-pass">Founder</span>
+          </span>
+          <span class="ticket-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <rect x="6" y="10" width="12" height="9" rx="2" stroke="currentColor" stroke-width="2"></rect>
+              <path d="M8.5 10V7.7a3.5 3.5 0 0 1 7 0V10" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+              <path d="M12 14v2" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+            </svg>
+          </span>
+        </span>
+        <span class="ticket-body">
+          <span class="ticket-title">Grupo de Fundadores</span>
+          <span class="ticket-note">Menos de 30 vagas</span>
+          <span class="ticket-copy">Debata, ajude a moldar o app diretamente, acesso antecipado com oportunidades e bônus exclusivos.</span>
+        </span>
+        <span class="ticket-footer">
+          <span class="ticket-action">Quero ser Fundador →</span>
+          <span class="ticket-barcode" aria-hidden="true"></span>
+        </span>
       </a>
+
+      <a
+        class="thank-you-ticket thank-you-ticket--updates"
+        href="https://whatsapp.com/channel/0029VbCz1us2kNFmcqqs6L11"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Só quero acompanhar as atualizações do TranquiliWays"
+      >
+        <span class="ticket-bg" aria-hidden="true"></span>
+        <span class="ticket-watermark" aria-hidden="true">
+          <span>UPDATE</span>
+          <span>UPDATE</span>
+          <span>UPDATE</span>
+        </span>
+        <span class="ticket-header">
+          <span>
+            <span class="ticket-kicker">Passe News</span>
+            <span class="ticket-pass">Atualizações</span>
+          </span>
+          <span class="ticket-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <rect x="4" y="6" width="16" height="12" rx="2" stroke="currentColor" stroke-width="2"></rect>
+              <path d="m5.5 8 6.5 5 6.5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+          </span>
+        </span>
+        <span class="ticket-body">
+          <span class="ticket-title">Lista de Atualizações</span>
+          <span class="ticket-note"></span>
+          <span class="ticket-copy">Fique por dentro de tudo sem perder nada nessa construção de futuros vividos no presente.</span>
+        </span>
+        <span class="ticket-footer">
+          <span class="ticket-action">Quero acompanhar →</span>
+          <span class="ticket-barcode" aria-hidden="true"></span>
+        </span>
+      </a>
+
+      <svg class="ticket-filter" aria-hidden="true">
+        <filter id="ticket-bump">
+          <feTurbulence result="noise" numOctaves="3" baseFrequency="0.7" type="fractalNoise"></feTurbulence>
+          <feSpecularLighting in="noise" result="specular" lighting-color="#fffffc" specularExponent="25" specularConstant="0.8" surfaceScale="0.15">
+            <fePointLight z="210" y="100" x="100"></fePointLight>
+          </feSpecularLighting>
+          <feComposite result="noise2" operator="in" in="specular" in2="SourceGraphic"></feComposite>
+          <feBlend mode="screen" in2="noise2" in="SourceGraphic"></feBlend>
+        </filter>
+      </svg>
     </div>
 
   </div>
@@ -1725,7 +2082,7 @@
     function getSparkColor(e) {
       const target = e.target instanceof Element ? e.target : null;
 
-      if (target?.closest('.flip-card, .dilemma-orb-container, .textarea-overlay, .tw-textarea')) {
+      if (target?.closest('.flip-card, .dilemma-orb-container, .textarea-overlay, .tw-textarea, .thank-you-ticket')) {
         return config.interactiveSparkColor;
       }
 
