@@ -43,11 +43,12 @@
       position: fixed;
       inset: 0;
       z-index: 20;
-      width: 100%;
-      height: 100%;
+      width: 100vw;
+      height: 100dvh;
       display: block;
       pointer-events: none;
       user-select: none;
+      touch-action: none;
     }
 
     /* ─── Luzes ambiente (sol difuso) ─── */
@@ -2049,11 +2050,20 @@
 
     let animationId = 0;
     let resizeTimer;
+    let lastTouchSparkAt = 0;
+
+    function getViewportSize() {
+      const viewport = window.visualViewport;
+
+      return {
+        width: Math.round(viewport?.width || window.innerWidth),
+        height: Math.round(viewport?.height || window.innerHeight),
+      };
+    }
 
     function resizeCanvas() {
       const dpr = window.devicePixelRatio || 1;
-      const width = window.innerWidth;
-      const height = window.innerHeight;
+      const { width, height } = getViewportSize();
 
       canvas.width = Math.round(width * dpr);
       canvas.height = Math.round(height * dpr);
@@ -2067,7 +2077,8 @@
     }
 
     function draw(timestamp) {
-      ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+      const { width, height } = getViewportSize();
+      ctx.clearRect(0, 0, width, height);
 
       for (let i = sparks.length - 1; i >= 0; i -= 1) {
         const spark = sparks[i];
@@ -2100,20 +2111,27 @@
         animationId = window.requestAnimationFrame(draw);
       } else {
         animationId = 0;
+        ctx.clearRect(0, 0, width, height);
       }
     }
 
     function getClickPoint(e) {
-      if (e.clientX || e.clientY) {
-        return { x: e.clientX, y: e.clientY };
+      const rect = canvas.getBoundingClientRect();
+      const source = e.changedTouches?.[0] || e.touches?.[0] || e;
+
+      if (Number.isFinite(source.clientX) && Number.isFinite(source.clientY)) {
+        return {
+          x: source.clientX - rect.left,
+          y: source.clientY - rect.top,
+        };
       }
 
       const target = e.target instanceof Element ? e.target : document.body;
-      const rect = target.getBoundingClientRect();
+      const targetRect = target.getBoundingClientRect();
 
       return {
-        x: rect.left + rect.width / 2,
-        y: rect.top + rect.height / 2,
+        x: targetRect.left + targetRect.width / 2 - rect.left,
+        y: targetRect.top + targetRect.height / 2 - rect.top,
       };
     }
 
@@ -2127,10 +2145,20 @@
       return config.sparkColor;
     }
 
-    function handleClick(e) {
+    function handleSparkPointer(e) {
+      if (e.pointerType === 'mouse' && e.button !== 0) return;
+      if (e.type === 'mousedown' && performance.now() - lastTouchSparkAt < 700) return;
+      if (e.type === 'touchstart') lastTouchSparkAt = performance.now();
+
       const point = getClickPoint(e);
       const now = performance.now();
       const sparkColor = getSparkColor(e);
+
+      if (!Number.isFinite(point.x) || !Number.isFinite(point.y)) return;
+
+      if (sparks.length > 120) {
+        sparks.splice(0, sparks.length - 120);
+      }
 
       for (let i = 0; i < config.sparkCount; i += 1) {
         sparks.push({
@@ -2154,7 +2182,22 @@
       resizeTimer = window.setTimeout(resizeCanvas, 100);
     });
 
-    document.addEventListener('click', handleClick, true);
+    window.visualViewport?.addEventListener('resize', () => {
+      window.clearTimeout(resizeTimer);
+      resizeTimer = window.setTimeout(resizeCanvas, 60);
+    });
+
+    window.addEventListener('orientationchange', () => {
+      window.clearTimeout(resizeTimer);
+      resizeTimer = window.setTimeout(resizeCanvas, 180);
+    });
+
+    if (window.PointerEvent) {
+      document.addEventListener('pointerdown', handleSparkPointer, true);
+    } else {
+      document.addEventListener('touchstart', handleSparkPointer, { capture: true, passive: true });
+      document.addEventListener('mousedown', handleSparkPointer, true);
+    }
   })();
 
   document.querySelectorAll('.flip-card').forEach(card => {
