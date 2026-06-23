@@ -2404,6 +2404,7 @@
         s1.style.display = 'none';
         s2.style.display = 'block';
         s2.style.animation = 'fadeUp 0.4s cubic-bezier(0.23,1,0.32,1) both';
+        window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
         window.playSuccessLottie?.();
       }, 260);
     }, buttonMotionDuration);
